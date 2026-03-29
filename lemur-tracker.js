@@ -144,7 +144,7 @@ async function getGeolocation() {
   } 
   else {
     try {
-      const result = await makeRequest(`https://ip-api.com/json/${await getIp()}`, "GET", {"Content-Type": "application/json"});
+      const result = await makeRequest(`http://ip-api.com/json/${await getIp()}`, "GET", {"Content-Type": "application/json"});
       const geolocation = await result.json();
 
       let countryCode = null;
