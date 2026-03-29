@@ -1,4 +1,4 @@
-const LEMUR_SITE_URL = "http://localhost:8000" // Укажите URL API
+const LEMUR_SITE_URL = "https://lemur-s58p.onrender.com" // Укажите URL API
 
 async function postEvent(eventType){
   let eventData = null;
