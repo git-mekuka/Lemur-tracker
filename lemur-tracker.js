@@ -144,15 +144,22 @@ async function getGeolocation() {
   } 
   else {
     try {
-      const geolocation = await makeJsonpRequest(`http://ip-api.com/json/${await getIp()}`);
+      // const result = await makeRequest(`http://ip-api.com/json/${await getIp()}`, "GET", {"Content-Type": "application/json"});
+      // const geolocation = await result.json();
 
-      let countryCode = null;
-      let region = null;
+      // let countryCode = null;
+      // let region = null;
 
-      if (geolocation.status == "success") {
-        countryCode = geolocation.countryCode;
-        region = geolocation.region;
-      }
+      // if (geolocation.status == "success") {
+      //   countryCode = geolocation.countryCode;
+      //   region = geolocation.region;
+      // }
+
+      const result = await makeRequest(`${LEMUR_SITE_URL}/api/getGeoData?user_ip=${await getIp()}`, "GET", {"Content-Type": "application/json"});
+      const geolocation = await result.json();
+
+      countryCode = geolocation.countryCode;
+      region = geolocation.region;
 
       const geoData = { countryCode: countryCode, region: region };
       sessionStorage.setItem("geolocation", JSON.stringify(geoData));
@@ -182,30 +189,6 @@ async function makeRequest(url, method, headers, bodyData = 0) {
     });
     return result;    
   }
-}
-
-function makeJsonpRequest(url) {
-  return new Promise((resolve, reject) => {
-    const callbackName = "jsonp_cb_" + Date.now();
-
-    const script = document.createElement("script");
-
-    window[callbackName] = (data) => {
-      delete window[callbackName];
-      script.remove();
-      resolve(data);
-    };
-
-    script.src = `${url}?callback=${callbackName}`;
-
-    script.onerror = () => {
-      delete window[callbackName];
-      script.remove();
-      reject(new Error("JSONP error"));
-    };
-
-    document.body.appendChild(script);
-  });
 }
 
 postEvent('eventSiteEntry')
